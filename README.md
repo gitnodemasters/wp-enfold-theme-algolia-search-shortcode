@@ -1,0 +1,1 @@
+# wp-enfold-theme-algolia-search-shortcode
