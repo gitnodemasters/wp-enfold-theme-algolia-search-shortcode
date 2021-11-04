@@ -231,9 +231,10 @@ if (post_type == "resource") {
 const searchClient = algoliasearch(algolia_app_id, algolia_search_api_key);
 
 //only search in posts
-indexName = "wp3_posts_post";
-facet_attribute_tag = "taxonomies.post_tag";
-facet_attribute_type = "taxonomies.category"
+// indexName = "wp3_posts_post";
+// facet_attribute_tag = "taxonomies.post_tag";
+// facet_attribute_type = "taxonomies.category";
+// content_type_label = "";
 const search = instantsearch({
   indexName,
   searchClient,
@@ -276,7 +277,7 @@ const blogItemTemplate = `
 search.addWidgets([
   instantsearch.widgets.configure({
     facetingAfterDistinct,
-    // filters: content_type_label,
+    filters: content_type_label,
     hitsPerPage,
     maxValuesPerFacet: 50,
   }),
