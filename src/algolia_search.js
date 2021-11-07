@@ -209,35 +209,51 @@ var indexName = algolia_index_pre + "searchable_posts",
   facet_attribute_type = "",
   facet_attribute_tag = "";
 
-if (post_type == "resource") {
-  content_type_label = 'post_type_label:"Resources"';
-  facet_attribute_tag = "taxonomies.tag";
-  facet_attribute_type = "taxonomies.archiveresources_type";
-} else if (post_type == "blog") {
-  hitsPerPage = 12;
-  content_type_label = 'post_type_label:"Posts"';
-  facet_attribute_tag = "taxonomies.post_tag";
-  facet_attribute_type = "taxonomies.category";
-} else if (post_type == "event") {
-  indexName = algolia_index_pre + "posts_event";
-  facetingAfterDistinct = false;
-  facet_attribute_tag = "taxonomies.event_tag";
-  facet_attribute_type = "taxonomies.event_type";
-} else {
-  facet_attribute_tag = "taxonomies.tag";
-  facet_attribute_type = "taxonomies.archiveresources_type";
-}
+/* For Original data*/
+// if (post_type == "resource") {
+//   content_type_label = 'post_type_label:"Resources"';
+//   facet_attribute_tag = "taxonomies.tag";
+//   facet_attribute_type = "taxonomies.archiveresources_type";
+// } else if (post_type == "blog") {
+//   hitsPerPage = 12;
+//   content_type_label = 'post_type_label:"Posts"';
+//   facet_attribute_tag = "taxonomies.post_tag";
+//   facet_attribute_type = "taxonomies.category";
+// } else if (post_type == "event") {
+//   indexName = algolia_index_pre + "posts_event";
+//   content_type_label = 'post_type_label:"Posts"';
+//   facetingAfterDistinct = false;
+//   facet_attribute_tag = "taxonomies.event_tag";
+//   facet_attribute_type = "taxonomies.event_type";
+// } else {
+//   facet_attribute_tag = "taxonomies.tag";
+//   facet_attribute_type = "taxonomies.archiveresources_type";
+// }
+
 
 const searchClient = algoliasearch(algolia_app_id, algolia_search_api_key);
 
-//only search in posts
-// indexName = "wp3_posts_post";
-// facet_attribute_tag = "taxonomies.post_tag";
-// facet_attribute_type = "taxonomies.category";
-// content_type_label = "";
+//Search for new version -> only posts search
+indexName = algolia_index_pre + "posts_post";
+facet_attribute_tag = "taxonomies.post_tag";
+facet_attribute_type = "taxonomies.category";
+if (post_type == "resource") {
+  content_type_label = 'NOT taxonomies.category:"Blog" AND NOT taxonomies.category:"Event" AND NOT taxonomies.category:"Article" AND NOT taxonomies.category:"Press"';
+} else if (post_type == "blog") {
+  hitsPerPage = 12;
+  content_type_label = 'taxonomies.category:"Blog"';
+} else if (post_type == "event") {
+  content_type_label = 'taxonomies.category:"Event" OR taxonomies.category:"Webinar"';
+} else {
+  content_type_label = 'taxonomies.category:"Article" OR taxonomies.category:"Press"';
+}
+
 const search = instantsearch({
   indexName,
   searchClient,
+  attributesForFaceting: [
+    'post_type_custom',
+  ]
 });
 
 const MOBILE_WIDTH = 375;
@@ -296,7 +312,7 @@ search.addWidgets([
           : post_type == 'resource' || post_type == 'blog' ? `
       <div class="inner-block">
         <div class="col-inner">
-          <div class="featured-image" style="background-color:false;background-size:contain;background-image:url(${
+          <div class="featured-image" style="background-color:${data.background? data.background : 'false'};background-size:contain;background-image:url(${
             data.images.hasOwnProperty("large")
               ? data.images.large.url
               : data.images.hasOwnProperty("thumbnail")
@@ -319,23 +335,36 @@ search.addWidgets([
             }</p></div>
             <div class="read-more"><a href="${
               data.permalink
-            }">${data.taxonomies.archiveresources_type == 'Webinar' ? 'Watch Webinar' :  
-            data.taxonomies.archiveresources_type == 'Video' ? 'Play Video' :
-            data.taxonomies.archiveresources_type == 'Podcast' ? 'Listen Podcast' :
-            data.taxonomies.archiveresources_type == 'Case Study' || data.taxonomies.archiveresources_type == 'White Paper' 
-            || data.taxonomies.archiveresources_type == 'Solution Brief' ? 'Read ' + data.taxonomies.archiveresources_type :
-             'View ' + data.taxonomies.archiveresources_type}</a></div>
+            // }">${data.taxonomies.archiveresources_type == 'Webinar' ? 'Watch Webinar' :  
+            // data.taxonomies.archiveresources_type == 'Video' ? 'Play Video' :
+            // data.taxonomies.archiveresources_type == 'Podcast' ? 'Listen Podcast' :
+            // data.taxonomies.archiveresources_type == 'Case Study' || data.taxonomies.archiveresources_type == 'White Paper' 
+            // || data.taxonomies.archiveresources_type == 'Solution Brief' ? 'Read ' + data.taxonomies.archiveresources_type :
+            //  'View ' + data.taxonomies.archiveresources_type}</a></div>
+            }">${data.taxonomies.category == 'Webinar' ? 'Watch Webinar' :  
+            data.taxonomies.category == 'Video' ? 'Play Video' :
+            data.taxonomies.category == 'Podcast' ? 'Listen Podcast' :
+            data.taxonomies.category == 'Case Study' || data.taxonomies.category == 'White Paper' 
+            || data.taxonomies.category == 'Solution Brief' ? 'Read ' + data.taxonomies.category :
+             'View ' + data.taxonomies.category}</a></div>
           </div>
         </div>
       </div>
         ` : post_type == 'event' ? `
       <div class="inner-block resource-slide card-block-inner" style="background-color: 
-            ${data.taxonomies.event_type == 'Webinar' ? 'rgb(121, 166, 247)' :
-            data.taxonomies.event_type == 'Conferences' ? 'rgb(79, 229, 254)' :
-            data.taxonomies.event_type == 'Field Event' ? 'rgb(59, 204, 253)' :
-            data.taxonomies.event_type == 'Road Shows' ? 'rgb(125, 153, 211)' : ''};"> <!-- IF external_url  has-link -->
+            ${data.taxonomies.category == 'Webinar' ? 'rgb(121, 166, 247)' :
+            data.taxonomies.category == 'Conferences' ? 'rgb(79, 229, 254)' :
+            data.taxonomies.category == 'Field Event' ? 'rgb(59, 204, 253)' :
+            data.taxonomies.category == 'Road Shows' ? 'rgb(125, 153, 211)' : 'rgb(125, 153, 211)'};"> <!-- IF external_url  has-link -->
         <div class="logo-block-area">
-          <img class="item-image" src="${data.images.company_logo.url}" alt="Webinar">
+          <img class="item-image" src="${
+            data.images.hasOwnProperty("large")
+              ? data.images.large.url
+              : data.images.hasOwnProperty("thumbnail")
+              ? data.images.thumbnail.url
+              : data.images.hasOwnProperty("company_logo")
+              ? data.images.company_logo.url : ''
+            }" alt="Webinar">
         </div>
         <h6 class="item-title">${data.post_title}</h6>
         <p class="event-location">
@@ -344,10 +373,10 @@ search.addWidgets([
         <p class="event-location">${data.event_location}</p>
         <div class="item-content content-styled">
           <span data-link="${data.permalink}" class="link">
-            ${data.taxonomies.event_type == 'Webinar' ? 'Watch Webinar' :  
-            data.taxonomies.event_type == 'Conferences' ? 'RSVP Now' :
-            data.taxonomies.event_type == 'Field Event' ? 'RSVP Now' :
-            data.taxonomies.event_type == 'Road Shows' ? 'RSVP Now' : ''}</span>
+            ${data.taxonomies.category == 'Webinar' ? 'Watch Webinar' :  
+            data.taxonomies.category == 'Conferences' ? 'RSVP Now' :
+            data.taxonomies.category == 'Field Event' ? 'RSVP Now' :
+            data.taxonomies.category == 'Road Shows' ? 'RSVP Now' : 'View ' + data.taxonomies.category}</span>
         </div>
       </div>
         ` : '',
@@ -378,40 +407,3 @@ search.addWidgets([
 ]);
 
 search.start();
-
-// Filter Tags
-// jQuery("#topics > div > div.ais-Panel-body > div > div > ul").change(function() {
-//   console.log("*****************topics")
-//   var filter_tag = 'text';
-//   $(".filter-topic").hide();
-//   if(filter_tag){
-//     $(".populate-tags").append('<div class="filter-tag filter-topic" data-filter-tag="'+filter_tag+'">'+filter_tag+'<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><path d="M0 6.912C0 3.0936 3.0888 0 6.9066 0C10.7292 0 13.818 3.0936 13.818 6.912C13.818 10.725 10.7292 13.8234 6.9066 13.8234C3.0888 13.8234 0 10.725 0 6.912ZM10.1467 10.8936L10.8895 10.1514L7.65131 6.912L10.8895 3.672L10.1467 2.9298L6.90911 6.1692L3.67151 2.9298L2.92871 3.672L6.16691 6.912L2.92871 10.1514L3.67151 10.8936L6.90911 7.6542L10.1467 10.8936Z" id="Fill-1-Copy" fill="#2A96EE" fill-rule="evenodd" stroke="none" /></svg></a>');
-//   }
-//   $(".filter-tags").show();
-// });
-
-// $("#facet-type-dropdown select").change(function() {
-//   var filter_tag = $(this).val();
-//   $(".filter-type").hide();
-//   if(filter_tag){
-//     $(".populate-tags").append('<div class="filter-tag filter-type" data-filter-tag="'+filter_tag+'">'+filter_tag+'<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><path d="M0 6.912C0 3.0936 3.0888 0 6.9066 0C10.7292 0 13.818 3.0936 13.818 6.912C13.818 10.725 10.7292 13.8234 6.9066 13.8234C3.0888 13.8234 0 10.725 0 6.912ZM10.1467 10.8936L10.8895 10.1514L7.65131 6.912L10.8895 3.672L10.1467 2.9298L6.90911 6.1692L3.67151 2.9298L2.92871 3.672L6.16691 6.912L2.92871 10.1514L3.67151 10.8936L6.90911 7.6542L10.1467 10.8936Z" id="Fill-1-Copy" fill="#2A96EE" fill-rule="evenodd" stroke="none" /></svg></a>');
-//   }
-//   $(".filter-tags").show();
-// });
-
-// // Clear Filters
-// $('body').on('click', '.clear-selected', function() {
-//   $("#facet-type-dropdown select").prop('selectedIndex',0).trigger("change");
-//   $("#facet-topic-dropdown select").prop('selectedIndex',0).trigger("change");
-//   $(".filter-type").hide();
-//   $(".filter-topic").hide();
-//   $('.filter-tags').hide();
-// });
-
-// $('body').on('click', '.filter-type', function() {
-//   $(".filter-type").hide();
-//   $("#facet-type-dropdown select").prop('selectedIndex',0).trigger("change");
-//   if(!$("#facet-topic-dropdown select").val()) {
-//     $('.filter-tags').hide();
-//   }
-// });
