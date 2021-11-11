@@ -202,7 +202,7 @@
   min-height: 153px;
 }
 
-.blog .hr, .event .hr {
+.blog .hr, .event .hr, .news .hr {
   display: none;
 }
 
@@ -257,7 +257,8 @@
 }
 
 .blog .inner-text h5 {
-  height: 30%;
+  height: 20%;
+  overflow: hidden;
 }
 
 .event .inner-text h5 {
@@ -275,13 +276,14 @@
 
 .the-excerpt {
   padding-top: 10px;
-  height: 65%;
-  overflow-y: clip;
+  height: 60%;
+  overflow-y: hidden;
 }
 
 .read-more {
   height: 10%;
   padding-top: 10px;
+  overflow: hidden;
 }
 
 .ais-Hits ol {

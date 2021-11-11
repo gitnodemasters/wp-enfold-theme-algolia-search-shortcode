@@ -234,18 +234,18 @@ var indexName = algolia_index_pre + "searchable_posts",
 const searchClient = algoliasearch(algolia_app_id, algolia_search_api_key);
 
 //Search for new version -> only posts search
-indexName = algolia_index_pre + "posts_post";
+// indexName = algolia_index_pre + "posts_post";
 facet_attribute_tag = "taxonomies.post_tag";
 facet_attribute_type = "taxonomies.category";
 if (post_type == "resource") {
-  content_type_label = 'NOT taxonomies.category:"Blog" AND NOT taxonomies.category:"Event" AND NOT taxonomies.category:"Article" AND NOT taxonomies.category:"Press"';
+  content_type_label = 'NOT taxonomies.category:"Blog" AND NOT taxonomies.category:"Event" AND NOT taxonomies.category:"Article" AND NOT taxonomies.category:"Press Release"';
 } else if (post_type == "blog") {
   hitsPerPage = 12;
   content_type_label = 'taxonomies.category:"Blog"';
 } else if (post_type == "event") {
-  content_type_label = 'taxonomies.category:"Event" OR taxonomies.category:"Webinar"';
+  content_type_label = 'taxonomies.category:"Event"';
 } else {
-  content_type_label = 'taxonomies.category:"Article" OR taxonomies.category:"Press"';
+  content_type_label = 'taxonomies.category:"Article" OR taxonomies.category:"Press Release"';
 }
 
 const search = instantsearch({
@@ -309,7 +309,7 @@ search.addWidgets([
       item: (data) =>
         data.exclude_from_search
           ? null
-          : post_type == 'resource' || post_type == 'blog' ? `
+          : post_type == 'resource' || post_type == 'blog' || post_type == 'news' ? `
       <div class="inner-block">
         <div class="col-inner">
           <div class="featured-image" style="background-color:${data.background? data.background : 'false'};background-size:contain;background-image:url(${
@@ -346,8 +346,8 @@ search.addWidgets([
             data.taxonomies.category == 'Podcast' ? 'Listen Podcast' :
             data.taxonomies.category == 'Case Study' || data.taxonomies.category == 'White Paper' 
             || data.taxonomies.category == 'Solution Brief' ? 'Read ' + data.taxonomies.category :
-             'View ' + data.taxonomies.category}</a></div>
-          </div>
+            'View ' + data.taxonomies.category}</a></div>
+            </div>
         </div>
       </div>
         ` : post_type == 'event' ? `
