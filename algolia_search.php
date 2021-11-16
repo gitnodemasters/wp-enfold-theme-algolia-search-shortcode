@@ -254,7 +254,7 @@ if( ! class_exists('avia_sc_algolia_search'))
 							'subtype'	=> array(
 												__( 'Resource', 'avia_framework' )		=> 'resource',
 												__( 'Blog', 'avia_framework' )			=> 'blog',
-												__( 'Event', 'avia_framework' )			=> 'event',
+												// __( 'Event', 'avia_framework' )			=> 'event',
 												__( 'News', 'avia_framework' )			=> 'news',
 											)
 						),				

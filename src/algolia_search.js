@@ -312,15 +312,12 @@ search.addWidgets([
           : post_type == 'resource' || post_type == 'blog' || post_type == 'news' ? `
       <div class="inner-block">
         <div class="col-inner">
-          <div class="featured-image" style="background-color:${data.background? data.background : 'false'};background-size:contain;background-image:url(${
-            data.images.hasOwnProperty("large")
-              ? data.images.large.url
-              : data.images.hasOwnProperty("thumbnail")
-              ? data.images.thumbnail.url
-              : ""
+          <div class="featured-image" style="background-color:${data.background? data.background : '#33CCFF'};background-size:contain;background-image:url(${
+            post_type == 'resource' ? (data.images.hasOwnProperty("thumbnail") ? data.images.thumbnail.url : '')
+              : post_type == 'blog' ? data.blog_image_for_algolia : data.news_image
           });"> <a href="customer-reviews-infographic"></a> </div>
-          <div class="hr" style="background-color:#1b1554;">
-            <div style="background:#4ea8df;width:100%;height:100%;display:block;"></div>
+          <div class="hr">
+            <div style="background:${data.horizontal_bar_color? data.horizontal_bar_color : 'false'};width:100%;height:100%;display:block;"></div>
           </div>
           <div class="inner-text">
             ${post_type == 'blog' ? `<p class="category"><a href="${
@@ -330,22 +327,15 @@ search.addWidgets([
               attribute: "post_title",
               hit: data,
             })}</h5>
-            <div class="the-excerpt"><p>${data.content} ${
-              data.post_excerpt
-            }</p></div>
-            <div class="read-more"><a href="${
-              data.permalink
-            // }">${data.taxonomies.archiveresources_type == 'Webinar' ? 'Watch Webinar' :  
-            // data.taxonomies.archiveresources_type == 'Video' ? 'Play Video' :
-            // data.taxonomies.archiveresources_type == 'Podcast' ? 'Listen Podcast' :
-            // data.taxonomies.archiveresources_type == 'Case Study' || data.taxonomies.archiveresources_type == 'White Paper' 
-            // || data.taxonomies.archiveresources_type == 'Solution Brief' ? 'Read ' + data.taxonomies.archiveresources_type :
-            //  'View ' + data.taxonomies.archiveresources_type}</a></div>
-            }">${data.taxonomies.category == 'Webinar' ? 'Watch Webinar' :  
+            <div class="the-excerpt"><p>${post_type == 'resource' ? data.resource_excerpt : 
+            post_type == 'blog' ? data.excerpt : ""}</p></div>
+            <div class="read-more"><a href="${data.external_url}">
+            ${data.taxonomies.category == 'Webinar' ? 'Watch Webinar' :  
             data.taxonomies.category == 'Video' ? 'Play Video' :
             data.taxonomies.category == 'Podcast' ? 'Listen Podcast' :
             data.taxonomies.category == 'Case Study' || data.taxonomies.category == 'White Paper' 
-            || data.taxonomies.category == 'Solution Brief' ? 'Read ' + data.taxonomies.category :
+            || data.taxonomies.category == 'Solution Brief' || data.taxonomies.category == 'Article' 
+            || data.taxonomies.category == 'Press Release' ? 'Read ' + data.taxonomies.category :
             'View ' + data.taxonomies.category}</a></div>
             </div>
         </div>
