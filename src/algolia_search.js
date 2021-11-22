@@ -312,12 +312,36 @@ search.addWidgets([
           : post_type == 'resource' || post_type == 'blog' || post_type == 'news' ? `
       <div class="inner-block">
         <div class="col-inner">
-          <div class="featured-image" style="background-color:${data.background? data.background : '#33CCFF'};background-size:contain;background-image:url(${
+          <div class="featured-image" style="background-color:${
+            data.background? data.background : 
+            data.taxonomies.category == 'Webinar' ? '#56ACF2' :  
+            data.taxonomies.category == 'Video' ? '#50D8AA' :
+            data.taxonomies.category == 'Podcast' ? '#50D8AA' :
+            data.taxonomies.category == 'Case Study' ? '#4DD1E2' :
+            data.taxonomies.category == 'White Paper' ? '#33CCFF' :
+            data.taxonomies.category == 'Solution Brief'? '#4BEDC6' :
+            data.taxonomies.category == 'Data Sheet' ? '#4BEDC6' :
+            data.taxonomies.category == 'Ebook' ? '#56ACF2' :
+            data.taxonomies.category == 'Infographic' ? '#4DD1E2' :
+            data.taxonomies.category == 'Report' ? '#33CCFF' :
+            '#33CCFF'};background-size:contain;background-image:url(${
             post_type == 'resource' ? (data.images.hasOwnProperty("thumbnail") ? data.images.thumbnail.url : '')
               : post_type == 'blog' ? data.blog_image_for_algolia : data.news_image
           });"> <a href="customer-reviews-infographic"></a> </div>
           <div class="hr">
-            <div style="background:${data.horizontal_bar_color? data.horizontal_bar_color : 'false'};width:100%;height:100%;display:block;"></div>
+            <div style="background:${
+              data.horizontal_bar_color? data.horizontal_bar_color :
+              data.taxonomies.category == 'Webinar' ? '#2278BE' :  
+              data.taxonomies.category == 'Video' ? '#1DA577' :
+              data.taxonomies.category == 'Podcast' ? '#1DA577' :
+              data.taxonomies.category == 'Case Study' ? '#199EAF' :
+              data.taxonomies.category == 'White Paper' ? '#0099CC' :
+              data.taxonomies.category == 'Solution Brief'? '#17BA92' :
+              data.taxonomies.category == 'Data Sheet' ? '#17BA92' :
+              data.taxonomies.category == 'Ebook' ? '#2278BE' :
+              data.taxonomies.category == 'Infographic' ? '#199EAF' :
+              data.taxonomies.category == 'Report' ? '#0099CC' :
+              '#33EEFF'};width:100%;height:100%;display:block;"></div>
           </div>
           <div class="inner-text">
             ${post_type == 'blog' ? `<p class="category"><a href="${
