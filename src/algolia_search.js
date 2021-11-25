@@ -325,7 +325,8 @@ search.addWidgets([
             data.taxonomies.category == 'Infographic' ? '#4DD1E2' :
             data.taxonomies.category == 'Report' ? '#33CCFF' :
             '#33CCFF'};background-size:contain;background-image:url(${
-            post_type == 'resource' ? (data.images.hasOwnProperty("thumbnail") ? data.images.thumbnail.url : '')
+            post_type == 'resource' ? (data.images.hasOwnProperty("large") ? data.images.large.url : 
+              data.images.hasOwnProperty("thumbnail")? data.images.thumbnail.url: '')
               : post_type == 'blog' ? data.blog_image_for_algolia : data.news_image
           });"> <a href="customer-reviews-infographic"></a> </div>
           <div class="hr">

@@ -1064,10 +1064,10 @@ if( ! class_exists('avia_sc_algolia_search'))
 			// $output .= '<div class="populate-tags"></div>';
 			// $output .= '<div class="clear-selected">&nbsp;Clear Selected</div>';
 			// $output .= '</div>';
-			$output .= '<div class="search-panel__filters">';
-			$output .= '<div id="topics" class="col-md-4 col-sm-12"></div>';
-			$output .= '<div id="types" class="col-md-4 col-sm-12"></div>';
-			$output .= '<div id="searchbox" class="col-md-4 col-sm-12"></div>';
+			$output .= '<div class="row search-panel__filters">';
+			$output .= '<div id="topics" class="col-12 col-md-4"></div>';
+			$output .= '<div id="types" class="col-12 col-md-4"></div>';
+			$output .= '<div id="searchbox" class="col-12 col-md-4"></div>';
 			$output .= '</div>';
 			
 			$output .= "<div id='hits' class='{$post_types}'></div>";
