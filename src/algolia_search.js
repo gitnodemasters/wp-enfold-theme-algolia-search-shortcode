@@ -324,10 +324,14 @@ search.addWidgets([
             data.taxonomies.category == 'Ebook' ? '#56ACF2' :
             data.taxonomies.category == 'Infographic' ? '#4DD1E2' :
             data.taxonomies.category == 'Report' ? '#33CCFF' :
-            '#33CCFF'};background-size:contain;background-image:url(${
+            data.taxonomies.category == 'Article' ? '#3BCCFD' :
+            data.taxonomies.category == 'Press Release' ? '#39D7DB' :
+            '#33CCFF'};background-size:${post_type == 'news' ? '150px' : 'cover'};background-image:url(${
             post_type == 'resource' ? (data.images.hasOwnProperty("large") ? data.images.large.url : 
               data.images.hasOwnProperty("thumbnail")? data.images.thumbnail.url: '')
-              : post_type == 'blog' ? data.blog_image_for_algolia : data.news_image
+              : post_type == 'blog' ? data.blog_image_for_algolia : 
+              post_type == 'news' ? data.news_image != ''? data.news_image : data.images.hasOwnProperty("large") ? data.images.large.url : 
+              data.images.hasOwnProperty("thumbnail")? data.images.thumbnail.url: '' : ''
           });"> <a href="customer-reviews-infographic"></a> </div>
           <div class="hr">
             <div style="background:${
