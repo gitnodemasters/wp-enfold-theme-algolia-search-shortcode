@@ -209,6 +209,8 @@ var indexName = algolia_index_pre + "searchable_posts",
   facet_attribute_type = "",
   facet_attribute_tag = "";
 
+const MAX_STRING_LEN = 120;
+
 /* For Original data*/
 // if (post_type == "resource") {
 //   content_type_label = 'post_type_label:"Resources"';
@@ -326,7 +328,7 @@ search.addWidgets([
             data.taxonomies.category == 'Report' ? '#33CCFF' :
             data.taxonomies.category == 'Article' ? '#3BCCFD' :
             data.taxonomies.category == 'Press Release' ? '#39D7DB' :
-            '#33CCFF'};background-size:${post_type == 'news' ? '150px' : 'cover'};background-image:url(${
+            '#33CCFF'};background-size:${post_type == 'news' ? '60%' : 'cover'};background-image:url(${
             post_type == 'resource' ? (data.images.hasOwnProperty("large") ? data.images.large.url : 
               data.images.hasOwnProperty("thumbnail")? data.images.thumbnail.url: '')
               : post_type == 'blog' ? data.blog_image_for_algolia : 
@@ -356,8 +358,8 @@ search.addWidgets([
               attribute: "post_title",
               hit: data,
             })}</h5>
-            <div class="the-excerpt"><p>${post_type == 'resource' ? data.resource_excerpt : 
-            post_type == 'blog' ? data.excerpt : ""}</p></div>
+            <div class="the-excerpt"><p>${post_type == 'resource' ? (data.hasOwnProperty("resource_excerpt") && data.resource_excerpt != '' ? data.resource_excerpt : 
+            data.content) : post_type == 'blog' ? (data.hasOwnProperty("excerpt") && data.excerpt != '' ? handleString(data.excerpt) : handleString(data.content)) : handleString(data.content)}</p></div>
             <div class="read-more"><a href="${data.external_url}">
             ${data.taxonomies.category == 'Webinar' ? 'Watch Webinar' :  
             data.taxonomies.category == 'Video' ? 'Play Video' :
@@ -424,5 +426,12 @@ search.addWidgets([
     // searchable: true,
   }),
 ]);
+
+const handleString = (str) => {
+  if (str.length > MAX_STRING_LEN) {
+    return str.substring(0, MAX_STRING_LEN) + '...';
+  }
+  return str;
+}
 
 search.start();
