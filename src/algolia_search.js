@@ -309,32 +309,35 @@ search.addWidgets([
     container: "#hits",
     templates: {
       item: (data) =>
-        data.exclude_from_search
+        data.exclude_from_search || !data.taxonomies.hasOwnProperty("category") || data.taxonomies.category == 'Uncategorized' 
           ? null
           : post_type == 'resource' || post_type == 'blog' || post_type == 'news' ? `
-      <div class="inner-block">
+      <div class="inner-block" ${post_type == 'blog' && `style="cursor: pointer;" onclick="window.location='${data.permalink}';"`}>
         <div class="col-inner">
-          <div class="featured-image" style="background-color:${
-            data.background? data.background : 
-            data.taxonomies.category == 'Webinar' ? '#56ACF2' :  
-            data.taxonomies.category == 'Video' ? '#50D8AA' :
-            data.taxonomies.category == 'Podcast' ? '#50D8AA' :
-            data.taxonomies.category == 'Case Study' ? '#4DD1E2' :
-            data.taxonomies.category == 'White Paper' ? '#33CCFF' :
-            data.taxonomies.category == 'Solution Brief'? '#4BEDC6' :
-            data.taxonomies.category == 'Data Sheet' ? '#4BEDC6' :
-            data.taxonomies.category == 'Ebook' ? '#56ACF2' :
-            data.taxonomies.category == 'Infographic' ? '#4DD1E2' :
-            data.taxonomies.category == 'Report' ? '#33CCFF' :
-            data.taxonomies.category == 'Article' ? '#3BCCFD' :
-            data.taxonomies.category == 'Press Release' ? '#39D7DB' :
-            '#33CCFF'};background-size:${post_type == 'news' ? '60%' : 'cover'};background-image:url(${
-            post_type == 'resource' ? (data.images.hasOwnProperty("large") ? data.images.large.url : 
+          <div class="featured-image" style="
+            background-color:${
+              data.background? data.background : 
+              data.taxonomies.category == 'Webinar' ? '#56ACF2' :  
+              data.taxonomies.category == 'Video' ? '#50D8AA' :
+              data.taxonomies.category == 'Podcast' ? '#50D8AA' :
+              data.taxonomies.category == 'Case Study' ? '#4DD1E2' :
+              data.taxonomies.category == 'White Paper' ? '#33CCFF' :
+              data.taxonomies.category == 'Solution Brief'? '#4BEDC6' :
+              data.taxonomies.category == 'Data Sheet' ? '#4BEDC6' :
+              data.taxonomies.category == 'Ebook' ? '#56ACF2' :
+              data.taxonomies.category == 'Infographic' ? '#4DD1E2' :
+              data.taxonomies.category == 'Report' ? '#33CCFF' :
+              data.taxonomies.category == 'Article' ? '#3BCCFD' :
+              data.taxonomies.category == 'Press Release' ? '#39D7DB' : '#33CCFF'};
+            background-size:${post_type == 'news' ? '60%' : 'cover'};
+            background-image:url(${
+              post_type == 'resource' ? (data.images.hasOwnProperty("large") ? data.images.large.url : 
               data.images.hasOwnProperty("thumbnail")? data.images.thumbnail.url: '')
               : post_type == 'blog' ? data.blog_image_for_algolia : 
               post_type == 'news' ? data.news_image != ''? data.news_image : data.images.hasOwnProperty("large") ? data.images.large.url : 
               data.images.hasOwnProperty("thumbnail")? data.images.thumbnail.url: '' : ''
-          });"> <a href="customer-reviews-infographic"></a> </div>
+          });"> 
+          <a href="customer-reviews-infographic"></a> </div>
           <div class="hr">
             <div style="background:${
               data.horizontal_bar_color? data.horizontal_bar_color :
@@ -358,17 +361,19 @@ search.addWidgets([
               attribute: "post_title",
               hit: data,
             })}</h5>
-            <div class="the-excerpt"><p>${post_type == 'resource' ? (data.hasOwnProperty("resource_excerpt") && data.resource_excerpt != '' ? data.resource_excerpt : 
-            data.content) : post_type == 'blog' ? (data.hasOwnProperty("excerpt") && data.excerpt != '' ? handleString(data.excerpt) : handleString(data.content)) : handleString(data.content)}</p></div>
-            <div class="read-more"><a href="${data.external_url}">
-            ${data.taxonomies.category == 'Webinar' ? 'Watch Webinar' :  
-            data.taxonomies.category == 'Video' ? 'Play Video' :
-            data.taxonomies.category == 'Podcast' ? 'Listen Podcast' :
-            data.taxonomies.category == 'Case Study' || data.taxonomies.category == 'White Paper' 
-            || data.taxonomies.category == 'Solution Brief' || data.taxonomies.category == 'Article' 
-            || data.taxonomies.category == 'Press Release' ? 'Read ' + data.taxonomies.category :
-            'View ' + data.taxonomies.category}</a></div>
-            </div>
+            <div class="the-excerpt"><p>${
+              post_type == 'resource' ? (data.hasOwnProperty("resource_excerpt") && data.resource_excerpt != '' ? data.resource_excerpt : data.content) 
+              : post_type == 'blog' ? (data.hasOwnProperty("excerpt") && data.excerpt != '' ? handleString(data.excerpt) : handleString(data.content))
+              : handleString(data.content)}</p></div>
+            <div class="read-more"><a href="${data.external_url || data.external_url != '' ? data.external_url : data.permalink}"> ${
+              data.taxonomies.category == 'Webinar' ? 'Watch Webinar' :  
+              data.taxonomies.category == 'Video' ? 'Play Video' :
+              data.taxonomies.category == 'Podcast' ? 'Listen Podcast' :
+              data.taxonomies.category == 'Case Study' || data.taxonomies.category == 'White Paper' 
+              || data.taxonomies.category == 'Solution Brief' || data.taxonomies.category == 'Article' 
+              || data.taxonomies.category == 'Press Release' ? 'Read ' + data.taxonomies.category :
+              'View ' + data.taxonomies.category}</a></div>
+          </div>
         </div>
       </div>
         ` : post_type == 'event' ? `
